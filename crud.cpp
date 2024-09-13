@@ -63,6 +63,26 @@ void Etudiant::setAdress(const char* query_string) {
     }
 }
 
+std::string Etudiant::getNom()
+{
+    return nom;
+}
+std::string Etudiant::getPrenom()
+{
+    return prenom;
+}
+int Etudiant::getAge()
+{
+    return age;
+}
+std::string Etudiant::getAdresse()
+{
+    return addresse;
+}
+
+
+
+
 bool Etudiant::sauvegarderDansFichier(const std::string& nomFichier) const {
     std::ofstream dataEtudiant(nomFichier, std::ios::app);
     if (!dataEtudiant) {
@@ -191,4 +211,10 @@ bool Etudiant::mettreAJourEtudiant(const std::string& nomFichier, const std::str
         outFile.close();
     }
     return found;
+}
+void Etudiant::setSession(std::string sess){
+    session=sess;
+}
+std::string Etudiant::getSession(){
+    return session;
 }

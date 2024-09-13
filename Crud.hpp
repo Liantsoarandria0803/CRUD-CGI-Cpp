@@ -8,7 +8,7 @@ private:
     std::string nom;
     std::string prenom;
     int age;
-    std::string addresse;
+    std::string addresse, session;
 
 public:
     Etudiant();
@@ -18,7 +18,13 @@ public:
     void setPrenom(const char* query_string);
     void setAge(const char* query_string);
     void setAdress(const char* query_string);
-
+    void setSession(std::string sess);
+    //Getter 
+    std::string getNom();
+    std::string getPrenom();
+    int getAge();
+    std::string getAdresse();
+    std::string getSession();
     // Méthode pour sauvegarder les données de l'étudiant dans un fichier
     bool sauvegarderDansFichier(const std::string& nomFichier) const;
 

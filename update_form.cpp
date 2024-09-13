@@ -1,10 +1,56 @@
+#include "Crud.hpp"
 #include <iostream>
 #include <cstdlib>
-#include "Crud.hpp"
+#include <fstream>
 #include <cstring>
+#include <string>
+
+// Fonction pour extraire le cookie session_id du navigateur
+std::string get_cookie_session_id() {
+    char* cookies = std::getenv("HTTP_COOKIE");
+    if (cookies) {
+        std::string cookie_str(cookies);
+        std::size_t pos = cookie_str.find("session_id=");
+        if (pos != std::string::npos) {
+            // Extraire la valeur du cookie session_id
+            pos += std::strlen("session_id=");
+            std::size_t end_pos = cookie_str.find(";", pos);
+            return cookie_str.substr(pos, end_pos - pos);
+        }
+    }
+    return "";
+}
+
+// Fonction pour vérifier si la session est valide
+bool is_session_valid(const std::string& session_id) {
+    std::ifstream session_file("sessions.txt");
+    if (!session_file.is_open()) {
+        return false;
+    }
+    
+    std::string stored_session_id, login;
+    while (session_file >> stored_session_id >> login) {
+        if (stored_session_id == session_id) {
+            return true;  // Session valide
+        }
+    }
+    session_file.close();
+    return false;  // Session invalide
+}
 
 int main() {
     std::cout << "Content-Type: text/html\n\n";
+
+     // Récupérer le session_id depuis les cookies
+    std::string session_id = get_cookie_session_id();
+    
+    // Vérifier la validité de la session
+    if (session_id.empty() || !is_session_valid(session_id)) {
+        // Redirection vers la page de connexion si la session n'est pas valide
+        std::cout << "Status: 302 Found\n";
+        std::cout << "Location: loginAccess.cgi\n\n";
+        return EXIT_SUCCESS;
+    }
 
     char* query_string = std::getenv("QUERY_STRING");
     if (!query_string) {
